@@ -3,12 +3,11 @@ package librarian
 import (
 	"errors"
 	"fmt"
+	"library-management/person"
 )
 
 type Librarian struct {
-	ID    int
-	Name  string
-	Email string
+	person.Person
 }
 
 func NewLibrarian(
@@ -30,9 +29,12 @@ func NewLibrarian(
 	}
 
 	librarian := Librarian{
+		Person : person.Person{
 		ID:    id,
 		Name:  name,
 		Email: email,
+		},
+		
 	}
 
 	return &librarian, nil

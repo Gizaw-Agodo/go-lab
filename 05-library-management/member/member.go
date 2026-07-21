@@ -3,12 +3,12 @@ package member
 import (
 	"errors"
 	"fmt"
+
+	"library-management/person"
 )
 
 type Member struct {
-	ID    int
-	Name  string
-	Email string
+	person.Person
 	Phone string
 }
 
@@ -36,9 +36,12 @@ func NewMember(
 	}
 
 	member := Member{
+		Person: person.Person{
 		ID:    id,
 		Name:  name,
 		Email: email,
+		},
+
 		Phone: phone,
 	}
 
