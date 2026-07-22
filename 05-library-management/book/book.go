@@ -49,10 +49,10 @@ func Newbook(
 }
 
 func (b *Book) Borrow() error {
-	if b.Available == 0 {
+	if b.Available <= 0 {
 		return errors.New("No book available")
 	}
-	b.TotalCopy -= 1
+	b.Available -= 1
 	return nil
 }
  
