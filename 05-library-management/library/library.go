@@ -3,6 +3,7 @@ package library
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"library-management/book"
 	"library-management/borrow"
@@ -202,4 +203,37 @@ func (l Library) ListBorrowRecords() {
 	for _, borrow := range l.Borrows {
 		fmt.Println(borrow)
 	}
+}
+
+func (l Library) ExportBooks(filename string) error {
+	file, err := os.Create(filename)
+
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	if _, err := file.WriteString("Library books \n ============= \n\n");  err != nil {
+		return err 
+	}
+
+	for _, book := range l.Books {
+		if _, err := file.WriteString(book.String() + "\n"); err != nil {
+			return err 
+		}
+	}
+
+	return nil 
+}
+
+func (l *Library) ImportBooks(filename string ) error {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return err 
+	}
+	content := string(data)
+	fmt.Println(content)
+	//TODO:  will parse the content later into book 
+	return nil 
 }

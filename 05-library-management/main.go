@@ -90,4 +90,7 @@ func main(){
 		fmt.Println(err)
 	}
 	
+	if err := lib.ExportBooks("test-books"); err != nil {
+		fmt.Println(err)
+	}
 }
