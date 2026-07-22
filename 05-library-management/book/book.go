@@ -6,12 +6,12 @@ import (
 )
 
 type Book struct {
-	ISBN string
-	Name string 
-	Author string 
-	Category string 
-	TotalCopy int 
-	Available int 
+	ISBN string `json:"isbn"`
+	Name string `json:"name"`
+	Author string  `json:"author"`
+	Category string `json:"category"`
+	TotalCopy int 	`json:"totalCopy"`
+	Available int 	`json:"available"`
 }
 
 func Newbook(

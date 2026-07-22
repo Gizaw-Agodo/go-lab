@@ -1,6 +1,7 @@
 package library
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -206,34 +207,30 @@ func (l Library) ListBorrowRecords() {
 }
 
 func (l Library) ExportBooks(filename string) error {
-	file, err := os.Create(filename)
-
+	data, err := json.MarshalIndent(l.Books, "", "   ")
 	if err != nil {
-		return err
-	}
-
-	defer file.Close()
-
-	if _, err := file.WriteString("Library books \n ============= \n\n");  err != nil {
 		return err 
 	}
-
-	for _, book := range l.Books {
-		if _, err := file.WriteString(book.String() + "\n"); err != nil {
-			return err 
-		}
+	if err := os.WriteFile(filename,data, 0644); err != nil {
+		return err 
 	}
+	
 
 	return nil 
 }
 
 func (l *Library) ImportBooks(filename string ) error {
 	data, err := os.ReadFile(filename)
+	
 	if err != nil {
 		return err 
 	}
-	content := string(data)
-	fmt.Println(content)
-	//TODO:  will parse the content later into book 
+    
+	var books map[string]*book.Book
+
+	if err := json.Unmarshal(data, &books); err != nil {
+		return err 
+	}
+	l.Books = books 
 	return nil 
 }

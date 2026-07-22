@@ -1,5 +1,18 @@
-Library books 
-===============
-
-ISBN: 12ss2233 | Name: The go programming language | Author: Alan Donovan | Available: 3/3
-ISBN: 9780132350884 | Name: Clean Code | Author: Robert C. Martin | Available: 2/1
+{
+   "12ss2233": {
+      "isbn": "12ss2233",
+      "name": "The go programming language",
+      "author": "Alan Donovan",
+      "category": "programming",
+      "totalCopy": 3,
+      "available": 3
+   },
+   "9780132350884": {
+      "isbn": "9780132350884",
+      "name": "Clean Code",
+      "author": "Robert C. Martin",
+      "category": "Programming",
+      "totalCopy": 1,
+      "available": 2
+   }
+}
