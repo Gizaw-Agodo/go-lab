@@ -1,0 +1,6 @@
+Concurrency allows multiple tasks to make progress at the same time.
+Go simplifies concurrent programming by providing goroutines and channels.
+A goroutine is lightweight compared to a traditional operating system thread.
+Channels allow goroutines to exchange data safely without explicit locks.
+Understanding synchronization is essential when building reliable software.
+The more projects you build, the more natural concurrency becomes.

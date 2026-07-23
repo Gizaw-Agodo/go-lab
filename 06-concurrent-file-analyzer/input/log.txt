@@ -1,0 +1,9 @@
+INFO Server started successfully.
+INFO Database connection established.
+WARNING Cache miss detected.
+INFO User logged in.
+ERROR Failed to load configuration.
+INFO Request completed.
+WARNING Disk usage above eighty percent.
+ERROR Unable to write log file.
+INFO Server shutting down.

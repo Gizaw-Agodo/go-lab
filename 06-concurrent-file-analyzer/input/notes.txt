@@ -1,0 +1,6 @@
+Buy groceries tomorrow.
+Complete the Go concurrency project.
+Review channels and goroutines.
+Read one chapter about synchronization.
+Exercise for one hour.
+Prepare for the upcoming interview.
