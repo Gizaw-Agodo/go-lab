@@ -10,12 +10,13 @@ func Crawl(paths []string, workerCount int)([]Result, []error){
 	jobs := make(chan Job)
 	results := make(chan Result)
 	errors := make(chan error)
+	stats := &Statistics{}
 
 	var wg sync.WaitGroup
 
 	wg.Add(workerCount)
 	for i := 1; i < workerCount; i ++ {
-		go Worker(i, jobs, results, errors, &wg)
+		go Worker(i, jobs, results, errors, &wg, stats)
 	}
 
 	go Produce(paths,jobs)
