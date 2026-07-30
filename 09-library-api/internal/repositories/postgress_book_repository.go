@@ -71,11 +71,10 @@ func (r *PostgressBookRepository) GetByID(ctx context.Context, id int) (*models.
 		}
 		return nil, err
 	}
-
 	return &book, nil
 }
 
-func (r *PostgressBookRepository) Create(ctx context.Context, book *models.Book) error {
+func (r *PostgressBookRepository) Create(ctx context.Context, book *models.Book) (*models.Book, error) {
 	query := `
 		INSERT INTO books (title, author)
 		VALUES ($1, $2)
@@ -86,11 +85,11 @@ func (r *PostgressBookRepository) Create(ctx context.Context, book *models.Book)
 		&book.CreatedAt,
 		&book.UpdatedAt,
 	); err != nil {
-		return err 
+		return nil, err 
 	}
 
 
-	return nil 
+	return book, nil 
 }
 
 func (r *PostgressBookRepository) Update(ctx context.Context, book * models.Book) error {
