@@ -8,9 +8,12 @@ import (
 	"go-lab/09-library-api/internal/server"
 	"go-lab/09-library-api/internal/services"
 	"log"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
 	cfg := config.Load()
 	database,err := database.New(cfg)
 	if err != nil {

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"go-lab/09-library-api/internal/middleware"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -8,6 +9,10 @@ import (
 
 func (s *Server) routes() http.Handler {
 	r := chi.NewRouter()
+
+	r.Use(middleware.Recovery)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Logger)
 
 	// home
 	r.Get("/", s.homeHandler.Home)
