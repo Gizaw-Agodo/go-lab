@@ -11,4 +11,5 @@ type BookRepository interface {
 	Create(ctx context.Context, book *models.Book) (*models.Book, error)
 	Update(ctx context.Context, book *models.Book) error
 	Delete(ctx context.Context, id int) error
+	List(ctx context.Context, params ListBooksParams) (*ListBooksResult, error)
 }

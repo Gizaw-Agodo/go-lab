@@ -51,6 +51,60 @@ func (r *PostgressBookRepository) GetAll(ctx context.Context)([]models.Book, err
 }
 
 
+func(r *PostgressBookRepository) List(ctx context.Context, params ListBooksParams) (*ListBooksResult, error){
+	query := `
+		SELECT
+			id,
+			title,
+			author,
+			created_at,
+			updated_at
+		FROM books
+		ORDER BY id
+		LIMIT $1 OFFSET $2
+	`
+	rows, err := r.db.QueryContext(ctx, query, params.Limit, params.Offset)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	
+
+	books := make([]models.Book,0, params.Limit)
+
+	for rows.Next() {
+		var book models.Book
+		if err := rows.Scan(
+			&book.ID, 
+			&book.Title, 
+			&book.Author, 
+			&book.CreatedAt, 
+			&book.UpdatedAt,
+		); err != nil {
+			return nil , err
+		}
+		books = append(books, book)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	const countQuery = `
+		SELECT COUNT(*)
+		FROM books
+	`
+
+	var total int
+
+	if err := r.db.QueryRowContext(ctx, countQuery).Scan(&total); err != nil {
+		return nil, err
+	}
+
+	return &ListBooksResult{ Books: books, Total: total, }, nil
+}
+
 func (r *PostgressBookRepository) GetByID(ctx context.Context, id int) (*models.Book, error){
 	query := `
 		SELECT id, title, author, created_at, updated_at

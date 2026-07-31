@@ -23,6 +23,20 @@ func (s *BookService) GetAll(ctx context.Context)([]models.Book, error){
 	return s.repo.GetAll(ctx)
 }
 
+func (s *BookService) ListBooks(ctx context.Context,params repositories.ListBooksParams ) (*ListBooksResult, error) {
+	result, err := s.repo.List(ctx, params)
+	if err != nil {
+		return nil, err 
+	}
+	return &ListBooksResult{
+		Books: result.Books,
+		Page: params.Page,
+		Limit: params.Limit,
+		Total: result.Total,
+
+	}, nil
+}
+
 func (s *BookService) GetByID(ctx context.Context, id int) (*models.Book, error){
 	book, err := s.repo.GetByID(ctx, id)
 	if err != nil {

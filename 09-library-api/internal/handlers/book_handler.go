@@ -48,6 +48,20 @@ func (h *BookHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, books)
 }
 
+func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
+	
+	params, err := dto.NewListBooksRequest(r)
+
+	if err != nil {
+		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
+	}
+	resp, err := h.service.ListBooks(r.Context(),params.ToRepositoryParams())
+	if err != nil {
+		response.WriteError(w, err)
+		return
+	}
+	response.JSON(w, http.StatusOK, resp)
+}
 
 
 func (h *BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
@@ -64,10 +78,7 @@ func (h *BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book := &models.Book{
-		Title: req.Title,
-		Author: req.Author,
-	}
+	book := req.ToBook()
 	
 	newBook, err := h.service.Create(r.Context(), book); 
 	
