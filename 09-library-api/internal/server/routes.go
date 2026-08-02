@@ -16,6 +16,9 @@ func (s *Server) routes() http.Handler {
 
 	// home
 	r.Get("/", s.homeHandler.Home)
+	r.Route("/auth", func (r chi.Router) {
+		r.Post("/register", s.authHanlder.RegisterUser)
+	})
 
 	// books 
 	r.Route("/books" , func(r chi.Router){

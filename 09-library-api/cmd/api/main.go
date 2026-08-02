@@ -21,12 +21,16 @@ func main() {
 	}
 
 	bookRepo := repositories.NewPostgressBookRepository(database)
+	userRepo := repositories.NewPostgressUserRepository(database)
+	
 	bookService := services.Newbookservice(bookRepo)
+	authService := services.NewAuthService(userRepo)
 
 	homeHandler := handlers.NewHomeHandler()
 	bookHandler := handlers.NewBookHandler(bookService)
+	authHandler := handlers.NewAuthHandler(authService)
 
-	srv := server.New(homeHandler, bookHandler)
+	srv := server.New(homeHandler, bookHandler, authHandler)
 	
 	log.Println("starting library api...")
 

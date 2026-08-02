@@ -5,3 +5,9 @@ type ListBooksParams struct {
 	Limit int 
 	Offset int 
 }
+
+type CreateUserParams struct {
+	Name string 
+	Email string 
+	PasswordHash string
+}
