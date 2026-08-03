@@ -36,3 +36,19 @@ func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request){
 	}
 	response.JSON(w, http.StatusCreated, dto.NewRegisterResponse(user))
 }
+
+func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request){
+	req, err := dto.NewLoginRequest(r)
+	if err != nil {
+		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
+		return 
+	}
+	user, token, err := h.authService.Login(r.Context(), req)
+	if err != nil {
+		response.WriteError(w, err)
+		return
+	}
+	resp := dto.ToLoginResponse(user, token)
+	response.JSON(w, http.StatusOK, resp)
+
+}

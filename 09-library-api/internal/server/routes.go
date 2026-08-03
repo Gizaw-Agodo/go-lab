@@ -18,15 +18,22 @@ func (s *Server) routes() http.Handler {
 	r.Get("/", s.homeHandler.Home)
 	r.Route("/auth", func (r chi.Router) {
 		r.Post("/register", s.authHanlder.RegisterUser)
+		r.Post("/login", s.authHanlder.Login)
 	})
+
 
 	// books 
 	r.Route("/books" , func(r chi.Router){
-		r.Get("/",s.bookHandler.GetBooks)
-		r.Post("/", s.bookHandler.CreateBook)
-		r.Get("/{id}", s.bookHandler.GetBook)
-		r.Put("/{id}", s.bookHandler.UpdateBook)
-		r.Delete("/{id}", s.bookHandler.DeleteBook)
+		
+		r.Group(func (r chi.Router){
+			r.Use(middleware.Authenticate)
+			r.Get("/",s.bookHandler.GetBooks)
+			r.Post("/", s.bookHandler.CreateBook)
+			r.Get("/{id}", s.bookHandler.GetBook)
+			r.Put("/{id}", s.bookHandler.UpdateBook)
+			r.Delete("/{id}", s.bookHandler.DeleteBook)
+
+		})
 
 	})
 

@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"errors"
 	"go-lab/09-library-api/internal/auth"
+	"go-lab/09-library-api/internal/domain"
 	"go-lab/09-library-api/internal/dto"
 	"go-lab/09-library-api/internal/models"
 	"go-lab/09-library-api/internal/repositories"
@@ -31,4 +33,26 @@ func (s *AuthService) Register(ctx context.Context, req *dto.RegisterRequest)(*m
 		PasswordHash: pasword_hash,
 	}
 	return s.userRepo.Create(ctx, params)
+}
+
+func (s *AuthService)Login(ctx context.Context, req *dto.LoginRequest)(*models.User,*string, error){
+	user, err := s.userRepo.GetByEmail(ctx,req.Email )
+	if err != nil {
+		if errors.Is(err, domain.ErrUserNotFound) {
+			return nil,nil, domain.ErrInvalidCredentials
+		}
+		return nil,nil, err
+	}
+
+	if err := auth.Compare(user.PasswordHash, req.Password); err != nil {
+		return nil,nil, domain.ErrInvalidCredentials
+	}
+
+	token, err := auth.GenerateToken( user.ID, user.Email,)
+	
+	if err != nil {
+		return nil,nil, err
+	}
+	return user, &token, nil
+
 }
