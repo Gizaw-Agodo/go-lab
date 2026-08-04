@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"encoding/json"
 	"errors"
 	"go-lab/09-library-api/internal/models"
 	"go-lab/09-library-api/internal/repositories"
@@ -60,4 +61,20 @@ func NewListBooksRequest(r *http.Request)(*ListBooksRequest, error){
 	}
 	
 	return &params, nil
+}
+
+func NewCreateBookRequest(r *http.Request)(*CreateBookRequest, error ){
+	req:= &CreateBookRequest{} 
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func NewUpdateBookRequest(r *http.Request)(*UpdateBookRequest, error ){
+	req:= &UpdateBookRequest{} 
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return nil, err
+	}
+	return req, nil
 }

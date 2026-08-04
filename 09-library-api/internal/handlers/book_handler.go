@@ -1,10 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
-	"fmt"
 	"go-lab/09-library-api/internal/dto"
-	"go-lab/09-library-api/internal/models"
 	"go-lab/09-library-api/internal/response"
 	"go-lab/09-library-api/internal/services"
 	"go-lab/09-library-api/internal/validation"
@@ -28,24 +25,24 @@ func (h *BookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "id")
 	id,err := strconv.Atoi(idParam)
 	if err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: "Invalid book id"})
+		response.Error(w, http.StatusBadRequest, "Invalid book id")
 		return
 	}
 	book,err := h.service.GetByID(r.Context(), id)
 	if err != nil {
-		response.WriteError(w, err)
+		response.DomainError(w, err)
 		return 
 	}
-	response.JSON(w, http.StatusOK, book)
+	response.OK(w, book)
 }
 
 func (h *BookHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 	books, err := h.service.GetAll(r.Context())
 	if err != nil {
-		response.WriteError(w,err)
+		response.DomainError(w,err)
 		return
 	}
-	response.JSON(w, http.StatusOK, books)
+	response.OK(w, books)
 }
 
 func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
@@ -53,89 +50,73 @@ func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	params, err := dto.NewListBooksRequest(r)
 
 	if err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
+		response.Error(w, http.StatusBadRequest,err.Error())
 	}
 	resp, err := h.service.ListBooks(r.Context(),params.ToRepositoryParams())
 	if err != nil {
-		response.WriteError(w, err)
+		response.DomainError(w, err)
 		return
 	}
-	response.JSON(w, http.StatusOK, resp)
+	response.OK(w, resp)
 }
 
 
 func (h *BookHandler) CreateBook(w http.ResponseWriter, r *http.Request) {
-	var req dto.CreateBookRequest
-	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
-
-	if err := decoder.Decode(&req); err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: "Invalid request body"})
-		return
-	}
-	if err := validation.Validate(req); err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
-		return
-	}
-
-	book := req.ToBook()
-	
-	newBook, err := h.service.Create(r.Context(), book); 
-	
+	req, err := dto.NewCreateBookRequest(r)
 	if err != nil {
-		response.WriteError(w, err)
+		response.Error(w, http.StatusInternalServerError, err.Error())
 		return 
 	}
-	response.JSON(w,http.StatusCreated, newBook)
+	if err := validation.Validate(req); err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	newBook, err := h.service.Create(r.Context(), req); 
+	if err != nil {
+		response.DomainError(w, err)
+		return 
+	}
+	response.Created(w, newBook)
 }
 
 func (h *BookHandler) UpdateBook(w http.ResponseWriter, r *http.Request) {
-	var req dto.UpdateBookRequest
-	var decoder = json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
 
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		response.JSON(w,http.StatusBadRequest, response.ErrorResponse{Error: "Invalid book id"})
+		response.Error(w,http.StatusBadRequest, "invalid book id")
 		return 
 	}
 	
-	if err := decoder.Decode(&req); err != nil {
-		response.JSON(w,http.StatusBadRequest, response.ErrorResponse{Error: "Invalid request body"})
+	req, err := dto.NewUpdateBookRequest(r)
+	if err != nil {
+		response.Error(w,http.StatusBadRequest, err.Error())
 		return 
 	}
 
 	if err := validation.Validate(req); err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: err.Error()})
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return 
 	}
 
-	book := &models.Book{
-		ID: int(id),
-		Title: req.Title,
-		Author: req.Author,
-	}
-	
-	err = h.service.Update(r.Context(),book)
+	err = h.service.Update(r.Context(),req, id)
 	if err != nil {
-		response.WriteError(w, err)
+		response.DomainError(w, err)
 		return 
 	}
-
-	response.JSON(w, http.StatusOK, req)
+	response.OK(w,req)
 }
 
 func (h *BookHandler) DeleteBook(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Delete a book")
 	id, err := strconv.Atoi(chi.URLParam(r,"id"))
 	if err != nil {
-		response.JSON(w, http.StatusBadRequest, response.ErrorResponse{Error: "invalid book id "})
+		response.Error(w, http.StatusBadRequest, "invalid book id")
 		return
 	}
 
 	if err := h.service.Delete(r.Context(), id); err != nil {
-		response.WriteError(w, err)
+		response.DomainError(w, err)
 		return 
 	}
-	w.WriteHeader(http.StatusNoContent)
+	response.NoContent(w)
 }

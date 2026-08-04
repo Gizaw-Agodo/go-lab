@@ -10,17 +10,20 @@ type Server struct {
 	homeHandler *handlers.HomeHandler
 	bookHandler *handlers.BookHandler
 	authHanlder *handlers.AuthHandler
+	borrowHandler *handlers.BorrowHandler
 }
 
 func New(
 	homeHandler  *handlers.HomeHandler, 
 	bookHandler *handlers.BookHandler,
 	authHanlder *handlers.AuthHandler,
+	borrowHandler *handlers.BorrowHandler,
 ) *Server {
 	s := &Server{
 		homeHandler: homeHandler,
 		bookHandler: bookHandler,
 		authHanlder: authHanlder,
+		borrowHandler: borrowHandler,
 	}
 	s.httpServer = &http.Server{
 		Addr: ":8080",

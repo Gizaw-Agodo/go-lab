@@ -37,5 +37,10 @@ func (s *Server) routes() http.Handler {
 
 	})
 
+	// borrow 
+	r.Route("/borrow", func(r chi.Router){
+		r.Post("/", s.borrowHandler.BorrowBook)
+	})
+
 	return r
 }

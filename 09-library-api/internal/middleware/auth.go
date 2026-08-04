@@ -16,20 +16,20 @@ func Authenticate(next http.Handler) http.Handler {
 	handler = func(w http.ResponseWriter, r *http.Request){
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == ""{
-			response.JSON(w,http.StatusUnauthorized, response.ErrorResponse{Error: "Missing authorization header"})
+			response.Error(w, http.StatusUnauthorized, "Missing authorization header")
 			return
 		}
 
 		token, ok := strings.CutPrefix(authHeader, "Bearer ")
 		
 		if !ok {
-			response.JSON(w,http.StatusUnauthorized, response.ErrorResponse{Error: "Missing authorization header"})
+			response.Error(w, http.StatusUnauthorized, "Missing authorization header")
 			return
 		}
 
 		claim, err := auth.ParseToken(token)
 		if err != nil {
-			response.JSON(w, http.StatusUnauthorized, response.ErrorResponse{Error:"invalid or expired token"})
+			response.Error(w, http.StatusUnauthorized, "invalid or expired token")
 			return
 		}
 
@@ -38,4 +38,12 @@ func Authenticate(next http.Handler) http.Handler {
 	}
 
 	return handler
+}
+
+func GetUser(ctx context.Context)(*auth.Claims, bool){
+	claim, ok := ctx.Value(UserContextKey).(*auth.Claims)
+	if !ok {
+		return nil, false
+	}
+	return claim, true
 }

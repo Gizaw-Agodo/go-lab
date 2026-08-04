@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"go-lab/09-library-api/internal/domain"
+	"go-lab/09-library-api/internal/dto"
 	"go-lab/09-library-api/internal/models"
 	"go-lab/09-library-api/internal/repositories"
 )
@@ -48,11 +49,20 @@ func (s *BookService) GetByID(ctx context.Context, id int) (*models.Book, error)
 	return book, err
 }
 
-func (s *BookService) Create(ctx context.Context, book *models.Book) (*models.Book, error) {
+func (s *BookService) Create(ctx context.Context, req *dto.CreateBookRequest) (*models.Book, error) {
+	book := &models.Book{
+		Title: req.Title,
+		Author: req.Author,
+	}
 	return s.repo.Create(ctx, book) 
 }
 
-func (s *BookService) Update(ctx context.Context, book *models.Book ) error {
+func (s *BookService) Update(ctx context.Context, req *dto.UpdateBookRequest , bookId int) error {
+	book := &models.Book{
+		ID: bookId,
+		Title: req.Title,
+		Author: req.Author,
+	}
 	err := s.repo.Update(ctx, book)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows){
