@@ -8,4 +8,5 @@ type Book struct {
 	Author string `json:"author"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time	`json:"updated_at"`
+	Available bool 	`json:"available"`
 }

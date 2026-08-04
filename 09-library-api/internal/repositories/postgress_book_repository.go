@@ -4,14 +4,16 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"go-lab/09-library-api/internal/database"
+	"go-lab/09-library-api/internal/domain"
 	"go-lab/09-library-api/internal/models"
 )
 
 type PostgressBookRepository struct {
-	db *sql.DB
+	db database.DBTX
 }
 
-func NewPostgressBookRepository(db *sql.DB) *PostgressBookRepository {
+func NewPostgressBookRepository(db database.DBTX) *PostgressBookRepository {
 	return &PostgressBookRepository{
 		db: db,
 	}
@@ -187,4 +189,31 @@ func (r *PostgressBookRepository)Delete(ctx context.Context, id int) error {
 		return sql.ErrNoRows
 	}
 	return nil 
+}
+
+
+func (r *PostgressBookRepository) UpdateAvailability( ctx context.Context, bookID int64, available bool,
+) error {
+	query := `
+		UPDATE books
+		SET
+			available = $1,
+			updated_at = NOW()
+		WHERE id = $2	`
+
+	result, err := r.db.ExecContext(ctx, query, available, bookID)
+	if err != nil {
+		return err
+	}
+
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		return err 
+	}
+	if rowCount == 0 {
+		return domain.ErrBorrowNotFound
+	}
+
+	return nil 
+
 }
