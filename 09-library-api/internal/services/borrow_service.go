@@ -70,3 +70,36 @@ func(s *BorrowService) Borrow(ctx context.Context, userID int64, bookID int64)er
 
 	return tx.Commit()
 }
+
+func (s *BorrowService) ReturnBook(ctx context.Context, userID, bookID int64)error {
+	
+	// 1. initiate transaction
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err 
+	}
+	defer tx.Rollback()
+
+	// 2. create repositories 
+	bookRepo := repositories.NewPostgressBookRepository(tx)
+	borrowRepo := repositories.NewPostgressBorrowRepository(tx)
+
+	// 3. check if there is active borrow 
+	activeBorrow, err := borrowRepo.GetActiveBorrow(ctx, userID, bookID)
+	if err != nil {
+		return err 
+	}
+
+	// 4. update borrow 
+	if err := borrowRepo.Return(ctx, activeBorrow.ID); err != nil {
+		return err
+	}
+
+	// 5. update book 
+	if err := bookRepo.UpdateAvailability(ctx, bookID, true); err != nil {
+		return err 
+	}
+
+	// 6 commit 
+	return tx.Commit()
+}

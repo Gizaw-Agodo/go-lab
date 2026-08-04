@@ -2,6 +2,7 @@ package dto
 
 import (
 	"encoding/json"
+	"go-lab/09-library-api/internal/validation"
 	"net/http"
 )
 
@@ -14,6 +15,10 @@ func NewBorrowRequest(r *http.Request)(*BorrowRequest, error){
 	err := json.NewDecoder(r.Body).Decode(borrowRequest)
 	if err != nil {
 		return nil, err 
+	}
+
+	if err := validation.Validate(borrowRequest); err != nil {
+		return nil, err
 	}
 	return borrowRequest, nil
 }

@@ -45,3 +45,24 @@ func (h *BorrowHandler) BorrowBook(w http.ResponseWriter, r *http.Request){
 	response.Created(w, response.SuccessResponse{Message: "book borrowed successfully"})
 
 }
+
+func (h *BorrowHandler)ReturnBook(w http.ResponseWriter, r *http.Request){
+	req, err := dto.NewBorrowRequest(r)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	claim, ok := middleware.GetUser(r.Context())
+	if !ok {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+	
+	if err := h.service.ReturnBook(r.Context(), claim.UserID, req.BookID); err != nil {
+		response.DomainError(w, err)
+		return
+	}
+
+	response.OK(w, response.SuccessResponse{Message: "book returned successfully"})
+
+}
