@@ -24,7 +24,13 @@ func (s *BookService) GetAll(ctx context.Context)([]models.Book, error){
 	return s.repo.GetAll(ctx)
 }
 
-func (s *BookService) ListBooks(ctx context.Context,params repositories.ListBooksParams ) (*ListBooksResult, error) {
+func (s *BookService) ListBooks(ctx context.Context,req *dto.ListBooksRequest ) (*ListBooksResult, error) {
+	params := repositories.ListBooksParams{
+		Page: req.Page,
+		Limit: req.Limit,
+		Offset: (req.Page - 1)* req.Limit,
+	}
+	
 	result, err := s.repo.List(ctx, params)
 	if err != nil {
 		return nil, err 

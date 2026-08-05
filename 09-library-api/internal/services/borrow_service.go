@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"go-lab/09-library-api/internal/domain"
+	"go-lab/09-library-api/internal/dto"
 	"go-lab/09-library-api/internal/models"
 	"go-lab/09-library-api/internal/repositories"
 )
@@ -102,4 +103,8 @@ func (s *BorrowService) ReturnBook(ctx context.Context, userID, bookID int64)err
 
 	// 6 commit 
 	return tx.Commit()
+}
+
+func (s *BorrowService) ListBorrowedBooks(ctx context.Context, userID int64)([]dto.ListBorrowResponse, error){
+	return s.borrowRepo.ListBorrowedBooks(ctx, userID)
 }

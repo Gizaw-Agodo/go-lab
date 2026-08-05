@@ -6,6 +6,7 @@ import (
 	"errors"
 	"go-lab/09-library-api/internal/database"
 	"go-lab/09-library-api/internal/domain"
+	"go-lab/09-library-api/internal/dto"
 	"go-lab/09-library-api/internal/models"
 )
 
@@ -39,7 +40,7 @@ func (r *PostgressBorrowRepository)Create(ctx context.Context, req *models.Borro
 		if err := r.db.QueryRowContext(ctx, query, req.UserID, req.BookID).Scan(
 			&borrow.ID,
 			&borrow.BorrowedAt,
-			borrow.ReturnedAt,
+			&borrow.ReturnedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -168,4 +169,46 @@ func (r *PostgressBorrowRepository)CountActiveBorrow(ctx context.Context, userID
 		return 0, err
 	}
 	return count, nil
+}
+
+func (r *PostgressBorrowRepository) ListBorrowedBooks(ctx context.Context, userID int64)([]dto.ListBorrowResponse, error){
+	query := `SELECT
+    b.id,
+    b.title,
+    b.author,
+    br.borrowed_at
+	FROM borrows br
+	JOIN books b
+		ON b.id = br.book_id
+	WHERE
+		br.user_id = $1
+		AND br.returned_at IS NULL
+	ORDER BY br.borrowed_at DESC;`
+
+	rows, err := r.db.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var borrows []dto.ListBorrowResponse
+	for rows.Next() {
+		var borrow dto.ListBorrowResponse
+		
+		if err := rows.Scan(
+			&borrow.BookID, 
+			&borrow.Title, 
+			&borrow.Author, 
+			&borrow.BorrowedAt,
+		); err != nil {
+			return nil, err 
+		}
+
+		borrows = append(borrows, borrow)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err 
+	}
+	return borrows, nil 
 }

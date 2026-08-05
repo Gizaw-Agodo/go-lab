@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"go-lab/09-library-api/internal/models"
-	"go-lab/09-library-api/internal/repositories"
 	"net/http"
 	"strconv"
 )
@@ -24,13 +23,6 @@ type ListBooksRequest struct {
 	Limit int 
 }
 
-func (r ListBooksRequest) ToRepositoryParams() repositories.ListBooksParams {
-	return repositories.ListBooksParams{
-		Page: r.Page,
-		Limit: r.Limit,
-		Offset: (r.Page - 1) * r.Limit,
-	}
-}
 
 func (r CreateBookRequest) ToBook() *models.Book {
 	return &models.Book{

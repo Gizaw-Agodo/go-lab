@@ -66,3 +66,18 @@ func (h *BorrowHandler)ReturnBook(w http.ResponseWriter, r *http.Request){
 	response.OK(w, response.SuccessResponse{Message: "book returned successfully"})
 
 }
+
+func (h *BorrowHandler)ListBorrowedBooks(w http.ResponseWriter, r *http.Request){
+	claim, ok := middleware.GetUser(r.Context())
+	if !ok {
+		response.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+	resp, err := h.service.ListBorrowedBooks(r.Context(), claim.UserID)
+	if err != nil {
+		response.DomainError(w, err)
+		return
+	}
+
+	response.OK(w, resp)
+}

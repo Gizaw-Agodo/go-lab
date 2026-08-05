@@ -23,6 +23,8 @@ func DomainError(w http.ResponseWriter, err error) {
 			writeJSON(w, http.StatusNotFound, ErrorResponse{Error: err.Error()})
 		case errors.Is(err, domain.ErrBorrowLimitReached): 
 			writeJSON(w, http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		case errors.Is(err, domain.ErrBookUnavailable): 
+			writeJSON(w, http.StatusNotFound, ErrorResponse{Error: err.Error()})
 
 		default:
 			log.Printf("unexpected err : %v", err)

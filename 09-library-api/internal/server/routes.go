@@ -39,8 +39,10 @@ func (s *Server) routes() http.Handler {
 
 	// borrow 
 	r.Route("/borrows", func(r chi.Router){
+		r.Use(middleware.Authenticate)
 		r.Post("/", s.borrowHandler.BorrowBook)
 		r.Post("/return", s.borrowHandler.ReturnBook)
+		r.Get("/me", s.borrowHandler.ListBorrowedBooks)
 	})
 
 	return r

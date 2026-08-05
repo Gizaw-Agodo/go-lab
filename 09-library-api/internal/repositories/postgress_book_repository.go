@@ -109,7 +109,7 @@ func(r *PostgressBookRepository) List(ctx context.Context, params ListBooksParam
 
 func (r *PostgressBookRepository) GetByID(ctx context.Context, id int) (*models.Book, error){
 	query := `
-		SELECT id, title, author, created_at, updated_at
+		SELECT id, title, author, created_at, updated_at, available
 		FROM books
 		WHERE id = $1
 	`
@@ -121,9 +121,10 @@ func (r *PostgressBookRepository) GetByID(ctx context.Context, id int) (*models.
 		&book.Author,
 		&book.CreatedAt, 
 		&book.UpdatedAt,
+		&book.Available,
 	); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, sql.ErrNoRows
+			return nil, domain.ErrBookNotFound
 		}
 		return nil, err
 	}

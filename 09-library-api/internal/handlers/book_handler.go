@@ -52,7 +52,7 @@ func (h *BookHandler) ListBooks(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response.Error(w, http.StatusBadRequest,err.Error())
 	}
-	resp, err := h.service.ListBooks(r.Context(),params.ToRepositoryParams())
+	resp, err := h.service.ListBooks(r.Context(),params)
 	if err != nil {
 		response.DomainError(w, err)
 		return
