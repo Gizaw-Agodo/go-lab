@@ -12,15 +12,17 @@ import (
 type Claims struct {
 	UserID int64
 	Email string
+	Role string
 	jwt.RegisteredClaims
 }
 
 const secret_string = "secret_string"
 
-func GenerateToken(userId int64, email string)(string, error){
+func GenerateToken(userId int64, email string, role string)(string, error){
 	claims := Claims{
 		UserID:userId ,
 		Email: email,
+		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt: jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24*time.Hour)),

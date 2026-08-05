@@ -29,6 +29,7 @@ func (r *PostgressUserRepository) Create(cxt context.Context, params CreateUserP
 	user := &models.User{
 		Name: params.Name,
 		Email: params.Email,
+		Role: "member",
 	}
 	if err := r.db.QueryRowContext(cxt, query, params.Name, params.Email, params.PasswordHash).Scan(
 		&user.ID, &user.CreatedAt, &user.UpdatedAt,
@@ -50,13 +51,14 @@ func (r *PostgressUserRepository)GetByEmail(cxt context.Context, email string)(*
 			email,
 			password_hash,
 			created_at,
-			updated_at
+			updated_at, 
+			role
 		FROM users
 		WHERE email = $1
 	`
 	user := &models.User{}
 	if err := r.db.QueryRowContext(cxt, query, email).Scan(
-		&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt,
+		&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt,&user.Role,
 	); err != nil  {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, domain.ErrUserNotFound
@@ -74,13 +76,14 @@ func(r *PostgressUserRepository)GetById(cxt context.Context, id int64)(*models.U
 			email,
 			password_hash,
 			created_at,
-			updated_at
+			updated_at,
+			role 
 		FROM users
 		WHERE id = $1
 	`
 	user := &models.User{}
 	if err := r.db.QueryRowContext(cxt, query, id).Scan(
-		&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt,
+		&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt, &user.UpdatedAt,&user.Role,
 	); err != nil {
 		if errors.Is(err, sql.ErrNoRows){
 			return nil , domain.ErrUserNotFound

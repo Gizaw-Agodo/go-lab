@@ -9,6 +9,7 @@ import (
 
 func (s *Server) routes() http.Handler {
 	r := chi.NewRouter()
+	
 
 	r.Use(middleware.Recovery)
 	r.Use(middleware.RequestID)
@@ -24,10 +25,11 @@ func (s *Server) routes() http.Handler {
 
 	// books 
 	r.Route("/books" , func(r chi.Router){
+		admin := r.With( middleware.Authenticate, middleware.RequireRole("admin"),)
+		admin.Get("/",s.bookHandler.GetBooks)
 		
 		r.Group(func (r chi.Router){
 			r.Use(middleware.Authenticate)
-			r.Get("/",s.bookHandler.GetBooks)
 			r.Post("/", s.bookHandler.CreateBook)
 			r.Get("/{id}", s.bookHandler.GetBook)
 			r.Put("/{id}", s.bookHandler.UpdateBook)

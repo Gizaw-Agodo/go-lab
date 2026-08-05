@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"slices"
 	"context"
 	"go-lab/09-library-api/internal/auth"
 	"go-lab/09-library-api/internal/response"
@@ -46,4 +47,30 @@ func GetUser(ctx context.Context)(*auth.Claims, bool){
 		return nil, false
 	}
 	return claim, true
+}
+
+func RequireRole(roles ...string) func(http.Handler) http.Handler {
+
+	return func (next http.Handler) http.Handler{
+		var handler http.HandlerFunc
+		handler = func(w http.ResponseWriter, r *http.Request){
+			user, ok := GetUser(r.Context())
+			if !ok {
+				response.Error(w, http.StatusUnauthorized, "unauthorized user")
+				return 
+			}
+			if slices.Contains(roles, user.Role) {
+					next.ServeHTTP(w, r)
+					return
+			}
+
+			response.Error(w, http.StatusForbidden, "Insuficcient permissions")
+				
+		}
+
+		return handler
+
+	}
+
+	
 }

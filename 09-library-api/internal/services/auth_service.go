@@ -48,7 +48,7 @@ func (s *AuthService)Login(ctx context.Context, req *dto.LoginRequest)(*models.U
 		return nil,nil, domain.ErrInvalidCredentials
 	}
 
-	token, err := auth.GenerateToken( user.ID, user.Email,)
+	token, err := auth.GenerateToken( user.ID, user.Email,user.Role)
 	
 	if err != nil {
 		return nil,nil, err

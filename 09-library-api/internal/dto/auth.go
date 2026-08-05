@@ -18,6 +18,7 @@ type RegisterResponse struct {
 	ID int64 `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
+	Role string `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -46,6 +47,7 @@ func NewRegisterResponse(user *models.User)RegisterResponse{
 		ID: user.ID,
 		Name: user.Name,
 		Email: user.Email,
+		Role : user.Role,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
