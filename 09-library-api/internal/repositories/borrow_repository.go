@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"context"
-	"go-lab/09-library-api/internal/dto"
-	"go-lab/09-library-api/internal/models"
+
+	"github.com/gizaw/09-library-api/internal/dto"
+	"github.com/gizaw/09-library-api/internal/models"
 )
 
 type BorrowRepository interface {

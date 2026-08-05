@@ -2,8 +2,9 @@ package auth
 
 import (
 	"errors"
-	"go-lab/09-library-api/internal/domain"
 	"time"
+
+	"github.com/gizaw/09-library-api/internal/domain"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

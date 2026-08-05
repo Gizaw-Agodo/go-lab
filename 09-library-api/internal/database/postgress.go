@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"go-lab/09-library-api/internal/config"
 	"time"
+
+	"github.com/gizaw/09-library-api/internal/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )

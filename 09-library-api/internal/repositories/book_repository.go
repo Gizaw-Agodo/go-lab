@@ -2,7 +2,8 @@ package repositories
 
 import (
 	"context"
-	"go-lab/09-library-api/internal/models"
+
+	"github.com/gizaw/09-library-api/internal/models"
 )
 
 type BookRepository interface {

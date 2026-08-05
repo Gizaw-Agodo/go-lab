@@ -1,16 +1,27 @@
 package main
 
 import (
-	"go-lab/09-library-api/internal/config"
-	"go-lab/09-library-api/internal/database"
-	"go-lab/09-library-api/internal/handlers"
-	"go-lab/09-library-api/internal/repositories"
-	"go-lab/09-library-api/internal/server"
-	"go-lab/09-library-api/internal/services"
 	"log"
 
+	"github.com/gizaw/09-library-api/internal/config"
+	"github.com/gizaw/09-library-api/internal/database"
+	"github.com/gizaw/09-library-api/internal/handlers"
+	"github.com/gizaw/09-library-api/internal/repositories"
+	"github.com/gizaw/09-library-api/internal/server"
+	"github.com/gizaw/09-library-api/internal/services"
+
+	_ "github.com/gizaw/09-library-api/docs"
 	"github.com/joho/godotenv"
 )
+
+// @title Library Management API
+// @version 1.0
+// @description REST API for Library Management.
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 func main() {
 	godotenv.Load()

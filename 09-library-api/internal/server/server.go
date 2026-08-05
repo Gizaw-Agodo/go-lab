@@ -1,8 +1,9 @@
 package server
 
 import (
-	"go-lab/09-library-api/internal/handlers"
 	"net/http"
+
+	"github.com/gizaw/09-library-api/internal/handlers"
 )
 
 type Server struct {

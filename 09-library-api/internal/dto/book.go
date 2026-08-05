@@ -3,9 +3,11 @@ package dto
 import (
 	"encoding/json"
 	"errors"
-	"go-lab/09-library-api/internal/models"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gizaw/09-library-api/internal/models"
 )
 
 type CreateBookRequest struct {
@@ -69,4 +71,22 @@ func NewUpdateBookRequest(r *http.Request)(*UpdateBookRequest, error ){
 		return nil, err
 	}
 	return req, nil
+}
+
+type BookResponse struct {
+	ID          int64     `json:"id"`
+	Title       string    `json:"title"`
+	Author      string    `json:"author"`
+	ISBN        string    `json:"isbn"`
+	Available   bool      `json:"available"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+type ListBooksResponse struct {
+	Books      []BookResponse `json:"books"`
+	Page       int            `json:"page"`
+	Limit      int            `json:"limit"`
+	TotalItems int            `json:"total_items"`
+	TotalPages int            `json:"total_pages"`
 }

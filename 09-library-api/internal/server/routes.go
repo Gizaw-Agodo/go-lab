@@ -1,20 +1,28 @@
 package server
 
 import (
-	"go-lab/09-library-api/internal/domain"
-	"go-lab/09-library-api/internal/middleware"
 	"net/http"
 
+	"github.com/gizaw/09-library-api/internal/domain"
+	"github.com/gizaw/09-library-api/internal/middleware"
+
 	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 func (s *Server) routes() http.Handler {
 	r := chi.NewRouter()
+
+	
 	
 
 	r.Use(middleware.Recovery)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+
+	r.Get("/swagger/*", httpSwagger.Handler(
+    	httpSwagger.URL("/swagger/doc.json"),
+	))
 
 	// home
 	r.Get("/", s.homeHandler.Home)
@@ -27,7 +35,7 @@ func (s *Server) routes() http.Handler {
 	// books 
 	r.Route("/books" , func(r chi.Router){
 		admin := r.With( middleware.Authenticate, middleware.RequireRole(domain.RoleAdmin),)
-		admin.Get("/",s.bookHandler.GetBooks)
+		admin.Get("/",s.bookHandler.ListBooks)
 		
 		r.Group(func (r chi.Router){
 			r.Use(middleware.Authenticate)

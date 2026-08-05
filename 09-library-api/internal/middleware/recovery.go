@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"go-lab/09-library-api/internal/response"
 	"log"
 	"net/http"
+
+	"github.com/gizaw/09-library-api/internal/response"
 )
 
 func Recovery(next http.Handler) http.Handler {

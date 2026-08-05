@@ -2,9 +2,10 @@ package response
 
 import (
 	"errors"
-	"go-lab/09-library-api/internal/domain"
 	"log"
 	"net/http"
+
+	"github.com/gizaw/09-library-api/internal/domain"
 )
 
 type ErrorResponse struct {

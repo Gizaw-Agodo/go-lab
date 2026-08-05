@@ -3,10 +3,11 @@ package services
 import (
 	"context"
 	"database/sql"
-	"go-lab/09-library-api/internal/domain"
-	"go-lab/09-library-api/internal/dto"
-	"go-lab/09-library-api/internal/models"
-	"go-lab/09-library-api/internal/repositories"
+
+	"github.com/gizaw/09-library-api/internal/domain"
+	"github.com/gizaw/09-library-api/internal/dto"
+	"github.com/gizaw/09-library-api/internal/models"
+	"github.com/gizaw/09-library-api/internal/repositories"
 )
 
 type BorrowService struct {

@@ -2,10 +2,11 @@ package dto
 
 import (
 	"encoding/json"
-	"go-lab/09-library-api/internal/models"
-	"go-lab/09-library-api/internal/validation"
 	"net/http"
 	"time"
+
+	"github.com/gizaw/09-library-api/internal/models"
+	"github.com/gizaw/09-library-api/internal/validation"
 )
 
 type RegisterRequest struct {

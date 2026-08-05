@@ -1,12 +1,13 @@
 package middleware
 
 import (
-	"slices"
 	"context"
-	"go-lab/09-library-api/internal/auth"
-	"go-lab/09-library-api/internal/response"
 	"net/http"
+	"slices"
 	"strings"
+
+	"github.com/gizaw/09-library-api/internal/auth"
+	"github.com/gizaw/09-library-api/internal/response"
 )
 
 const UserContextKey ContextKey = "user"
