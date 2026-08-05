@@ -1,6 +1,7 @@
 package server
 
 import (
+	"go-lab/09-library-api/internal/domain"
 	"go-lab/09-library-api/internal/middleware"
 	"net/http"
 
@@ -25,7 +26,7 @@ func (s *Server) routes() http.Handler {
 
 	// books 
 	r.Route("/books" , func(r chi.Router){
-		admin := r.With( middleware.Authenticate, middleware.RequireRole("admin"),)
+		admin := r.With( middleware.Authenticate, middleware.RequireRole(domain.RoleAdmin),)
 		admin.Get("/",s.bookHandler.GetBooks)
 		
 		r.Group(func (r chi.Router){

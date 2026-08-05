@@ -29,7 +29,7 @@ func (r *PostgressUserRepository) Create(cxt context.Context, params CreateUserP
 	user := &models.User{
 		Name: params.Name,
 		Email: params.Email,
-		Role: "member",
+		Role: domain.RoleMember,
 	}
 	if err := r.db.QueryRowContext(cxt, query, params.Name, params.Email, params.PasswordHash).Scan(
 		&user.ID, &user.CreatedAt, &user.UpdatedAt,
